@@ -1,21 +1,18 @@
+/**
+ * Dice module.
+ *
+ * Auxonomy. Copyright (C) 2015 Mikhail Voloshin. All rights reserved.
+ */
+
 var _ = require('../thirdparty/underscore-1.7.0-min.js');
 
-var auxonomy = {};
-auxonomy.model = {};
-
-// Dice encapsulates functions for rolling dice and returning results.
-auxonomy.model.Dice = {};
-
-(function() {
-
-
 /**
- * Dice holds the results of a roll of multiple dice.
+ * Roll holds the results of a roll of multiple dice.
  * @param {number} numDice How many dice to roll. 
  * @param {object=} opt_randProvider An object that provides random numbers. Must have a method
  *     called random(). Defaults to Math. 
  */
-auxonomy.model.Dice = function(numDice, opt_randProvider) {  
+var Roll = function(numDice, opt_randProvider) {  
   if (!_.isNumber(numDice)) {
     throw new TypeError('numDice must be of type number.');
   }
@@ -99,24 +96,6 @@ auxonomy.model.Dice = function(numDice, opt_randProvider) {
 };
 
 /** @type {int} How many sides per die. */
-auxonomy.model.Dice.prototype.NUM_SIDES = 10;
-})();
+Roll.prototype.NUM_SIDES = 10;
 
-
-var roll = new auxonomy.model.Dice(2);
-console.log(roll.rolls() + ' (' + roll.count() + ' dice rolled).');
-
-if (roll.isAnySuccess()) {
-  console.log('Successes: ' + roll.successCount());
-}
-if (roll.isCriticalSuccess()) {
-  console.log('CRITICAL SUCCESS!');
-}
-
-if (roll.isAnyFail()) {
-  console.log('Fails: ' + roll.failCount());
-}
-if (roll.isCriticalFail()) {
-  console.log('CRITICAL FAIL!');
-}
-
+exports.Roll = Roll;
