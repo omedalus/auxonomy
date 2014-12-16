@@ -76,24 +76,9 @@ exports.testDiceValueInRange = function(test){
   test.done();
 };
 
-/**
- * An object with a random() function that outputs a value of 1.0
- * exactly nSuccesses times, then outputs 0.
- * @param {number} nSuccesses How many successes to produce. -1 is a special
- *     value meaning, "Always produce successes."
- */
-var RandProvider = function(nSuccesses) {
-  var i = 0;
-
-  this.random = function() {
-    var retval = i < nSuccesses || nSuccesses === -1 ? .99999 : 0;
-    i++;
-    return retval;
-  }; 
-};
 
 exports.testCriticalFail = function(test){
-  var rp = new RandProvider(0);
+  var rp = new Dice.ArrayLoopRandProvider([0]);
   var roll = new Dice.Roll(10, rp);
   
   test.ok(roll.failCount() == 10,
@@ -114,7 +99,7 @@ exports.testCriticalFail = function(test){
 };
 
 exports.testCriticalSuccess = function(test){
-  var rp = new RandProvider(10);
+  var rp = new Dice.ArrayLoopRandProvider([.99]);
   var roll = new Dice.Roll(10, rp);
     
   test.ok(roll.failCount() == 0,
@@ -135,18 +120,18 @@ exports.testCriticalSuccess = function(test){
 };
 
 exports.testNonCritical = function(test){
-  var rp = new RandProvider(4);
-  var roll = new Dice.Roll(10, rp);
+  var rp = new Dice.ArrayLoopRandProvider([0, .99, .5, 0, .99, .2, .8, 0]);
+  var roll = new Dice.Roll(8, rp);
     
-  test.ok(roll.failCount() == 6,
-      'should have 6 fails, found ' + roll.failCount() + '.');
+  test.ok(roll.failCount() == 3,
+      'should have 3 fails, found ' + roll.failCount() + '.');
   test.ok(roll.isAnyFail(),
       'should know that some failed.');
   test.ok(!roll.isCriticalFail(),
       'should know that no critical failure happened.');
   
-  test.ok(roll.successCount() == 4,
-      'should have 4 successes, found ' + roll.successCount() + '.');
+  test.ok(roll.successCount() == 2,
+      'should have 2 successes, found ' + roll.successCount() + '.');
   test.ok(roll.isAnySuccess(),
       'should know that some succeeded.');
   test.ok(!roll.isCriticalSuccess(), 

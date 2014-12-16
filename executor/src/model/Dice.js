@@ -94,10 +94,30 @@ var Roll = function(numDice, opt_randProvider) {
   /** @return {boolean} True iff all of the dice rolls were the minimum. */
   this.isCriticalFail = function() {
     return numFails === numDice;
-  };
-  
+  };  
 };
+
+/**
+ * An object with a random() function that outputs the contents of the provided
+ * array, one after the other, in a loop.
+ * @param {Array.<number>} values An array of decimal values between 0 and 1.
+ */
+var ArrayLoopRandProvider = function(values) {
+  var i = 0;
+
+  this.random = function() {
+    var retval = values[i];
+
+    i++;
+    i %= values.length;
+    
+    return retval;
+  }; 
+};
+
 
 exports.Roll = Roll;
 exports.NUM_SIDES = NUM_SIDES;
+
+exports.ArrayLoopRandProvider = ArrayLoopRandProvider;
 
