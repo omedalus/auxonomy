@@ -46,7 +46,7 @@ var Roll = function(numDice, opt_randProvider) {
   var numFails = 0;
   
   _.times(numDice, function() {
-    var thisRoll = Math.floor(Math.random() * NUM_SIDES) + 1;
+    var thisRoll = Math.floor(opt_randProvider.random() * NUM_SIDES) + 1;
     rolls.push(thisRoll);
 
     if (thisRoll === NUM_SIDES) {

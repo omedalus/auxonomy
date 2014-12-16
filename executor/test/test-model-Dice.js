@@ -76,5 +76,82 @@ exports.testDiceValueInRange = function(test){
   test.done();
 };
 
+/**
+ * An object with a random() function that outputs a value of 1.0
+ * exactly nSuccesses times, then outputs 0.
+ * @param {number} nSuccesses How many successes to produce. -1 is a special
+ *     value meaning, "Always produce successes."
+ */
+var RandProvider = function(nSuccesses) {
+  var i = 0;
 
+  this.random = function() {
+    var retval = i < nSuccesses || nSuccesses === -1 ? .99999 : 0;
+    i++;
+    return retval;
+  }; 
+};
+
+exports.testCriticalFail = function(test){
+  var rp = new RandProvider(0);
+  var roll = new Dice.Roll(10, rp);
+  
+  test.ok(roll.failCount() == 10,
+      'should have 10 fails, found ' + roll.failCount() + '.');
+  test.ok(roll.isAnyFail(),
+      'should know that any failed.');
+  test.ok(roll.isCriticalFail(),
+      'should know that a critical failure happened.');
+  
+  test.ok(roll.successCount() == 0,
+      'should have 0 successes, found ' + roll.successCount() + '.');
+  test.ok(!roll.isAnySuccess(),
+      'should know that none succeeded.');
+  test.ok(!roll.isCriticalSuccess(), 
+      'should know that no critical success happened.');
+  
+  test.done();
+};
+
+exports.testCriticalSuccess = function(test){
+  var rp = new RandProvider(10);
+  var roll = new Dice.Roll(10, rp);
+    
+  test.ok(roll.failCount() == 0,
+      'should have 0 fails, found ' + roll.failCount() + '.');
+  test.ok(!roll.isAnyFail(),
+      'should know that none failed.');
+  test.ok(!roll.isCriticalFail(),
+      'should know that no critical failure happened.');
+  
+  test.ok(roll.successCount() == 10,
+      'should have 10 successes, found ' + roll.successCount() + '.');
+  test.ok(roll.isAnySuccess(),
+      'should know that any succeeded.');
+  test.ok(roll.isCriticalSuccess(), 
+      'should know that a critical success happened.');
+  
+  test.done();
+};
+
+exports.testNonCritical = function(test){
+  var rp = new RandProvider(4);
+  var roll = new Dice.Roll(10, rp);
+    
+  test.ok(roll.failCount() == 6,
+      'should have 6 fails, found ' + roll.failCount() + '.');
+  test.ok(roll.isAnyFail(),
+      'should know that some failed.');
+  test.ok(!roll.isCriticalFail(),
+      'should know that no critical failure happened.');
+  
+  test.ok(roll.successCount() == 4,
+      'should have 4 successes, found ' + roll.successCount() + '.');
+  test.ok(roll.isAnySuccess(),
+      'should know that some succeeded.');
+  test.ok(!roll.isCriticalSuccess(), 
+      'should know that no critical success happened.');
+  
+  test.done();
+};
 
