@@ -4,7 +4,10 @@
  * Auxonomy. Copyright (C) 2015 Mikhail Voloshin. All rights reserved.
  */
 
-var _ = require('../thirdparty/underscore-1.7.0-min.js');
+var _ = require('../../thirdparty/underscore-1.7.0-min.js');
+
+/** @const {int} How many sides per die. */
+var NUM_SIDES = 10;
 
 /**
  * Roll holds the results of a roll of multiple dice.
@@ -43,10 +46,10 @@ var Roll = function(numDice, opt_randProvider) {
   var numFails = 0;
   
   _.times(numDice, function() {
-    var thisRoll = Math.floor(Math.random() * self.NUM_SIDES) + 1;
+    var thisRoll = Math.floor(Math.random() * NUM_SIDES) + 1;
     rolls.push(thisRoll);
 
-    if (thisRoll === self.NUM_SIDES) {
+    if (thisRoll === NUM_SIDES) {
       numSuccesses++;
     } else if (thisRoll === 1) {
       numFails++;
@@ -95,7 +98,6 @@ var Roll = function(numDice, opt_randProvider) {
   
 };
 
-/** @type {int} How many sides per die. */
-Roll.prototype.NUM_SIDES = 10;
-
 exports.Roll = Roll;
+exports.NUM_SIDES = NUM_SIDES;
+
